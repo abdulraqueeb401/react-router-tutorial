@@ -25,7 +25,10 @@ export async function action() {
 export default function Root() {
   const { contacts, q } = useLoaderData();
   const navigation = useNavigation();
-  console.log(contacts);
+  console.log(navigation.location);
+  const searching =
+    navigation.location &&
+    new URLSearchParams(navigation.location.search).has("q");
   const submit = useSubmit();
   useEffect(() => {
     document.getElementById("q").value = q;
@@ -40,6 +43,7 @@ export default function Root() {
               id="q"
               aria-label="Search contacts"
               placeholder="Search"
+              className={searching ? "loading" : ""}
               type="search"
               name="q"
               defaultValue={q}
@@ -47,7 +51,7 @@ export default function Root() {
                 submit(event.currentTarget.form);
               }}
             />
-            <div id="search-spinner" aria-hidden hidden={true} />
+            <div id="search-spinner" aria-hidden hidden={!searching} />
             <div className="sr-only" aria-live="polite"></div>
           </Form>
           <Form method="post">
